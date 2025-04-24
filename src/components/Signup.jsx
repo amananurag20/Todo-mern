@@ -1,8 +1,11 @@
 import axios from "axios";
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     console.log(e);
     e.preventDefault();
@@ -12,7 +15,7 @@ const Signup = () => {
     const password = e.target[2].value;
 
     if (!userName || !email || !password) {
-      toast.warning("please fill all the fields");
+      return toast.warning("please fill all the fields");
     }
 
     try {
@@ -25,6 +28,7 @@ const Signup = () => {
       console.log(data);
       if (data.success) {
         toast.success("user created successfully");
+        navigate("/login");
       } else {
         toast.error("something went wrong");
       }
@@ -62,6 +66,12 @@ const Signup = () => {
             Signup
           </button>
         </form>
+        <p className="mt-4">
+          Already have a account?{" "}
+          <Link to={"/login"} className="text-blue-600 font-semibold">
+            Login here
+          </Link>
+        </p>
       </div>
     </div>
   );
