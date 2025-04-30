@@ -4,12 +4,18 @@ const socket = io("http://localhost:5000");
 
 const HomePage = () => {
   const [text, setText] = useState("");
+  const [room, setRoom] = useState("");
 
   const handleChange = (e) => {
     const newText = e.target.value;
     setText(newText);
     console.log(text);
     socket.emit("textChange", newText);
+  };
+
+  const handleRoomJoin = () => {
+    if (!room) return;
+    socket.emit("joinRoom", room);
   };
 
   useEffect(() => {
@@ -24,9 +30,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-lg">
-        <h1 className="text-2xl font-semibold mb-4 text-gray-800">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-6 space-y-6">
+      <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
           Collaborative Text Editor
         </h1>
         <textarea
@@ -35,7 +41,22 @@ const HomePage = () => {
           placeholder="Start typing..."
           value={text}
           onChange={handleChange}
-        ></textarea>
+        />
+      </div>
+
+      <div className="w-full max-w-md flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <input
+          className="w-full sm:w-auto flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter room to join"
+          value={room}
+          onChange={(e) => setRoom(e.target.value)}
+        />
+        <button
+          onClick={handleRoomJoin}
+          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Join Room
+        </button>
       </div>
     </div>
   );
